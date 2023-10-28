@@ -97,7 +97,7 @@ class MitsubishiHeatPump : public PollingComponent, public climate::Climate {
         // set_remote_temp(0) to switch back to the internal sensor.
         void set_remote_temperature(float);
 
-        void set_compressor_frequency_sensor(Sensor *sensor) { this->compressor_frequency_sensor_ = sensor; }
+        void set_compressor_frequency_sensor(Sensor *sensor) { this->compressor_frequency_sensor_ = sensor; };
 
     protected:
         // HeatPump object using the underlying Arduino library.
