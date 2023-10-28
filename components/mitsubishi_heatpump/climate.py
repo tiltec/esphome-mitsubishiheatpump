@@ -11,7 +11,7 @@ from esphome.const import (
     CONF_FAN_MODE,
     CONF_SWING_MODE,
 )
-from esphome.core import CORE, coroutine
+from esphome.core import CORE
 
 AUTO_LOAD = ["climate"]
 
@@ -69,7 +69,6 @@ CONFIG_SCHEMA = climate.CLIMATE_SCHEMA.extend(
 ).extend(cv.COMPONENT_SCHEMA)
 
 
-@coroutine
 async def to_code(config):
     serial = HARDWARE_UART_TO_SERIAL[config[CONF_HARDWARE_UART]]
     var = cg.new_Pvariable(config[CONF_ID], cg.RawExpression(f"&{serial}"))
@@ -97,8 +96,8 @@ async def to_code(config):
         sens = await sensor.new_sensor(config[CONF_COMPRESSOR_FREQUENCY])
         cg.add(var.set_compressor_frequency_sensor(sens))
 
-    yield cg.register_component(var, config)
-    yield climate.register_climate(var, config)
+    await cg.register_component(var, config)
+    await climate.register_climate(var, config)
     cg.add_library(
         name="HeatPump",
         repository="https://github.com/SwiCago/HeatPump",
