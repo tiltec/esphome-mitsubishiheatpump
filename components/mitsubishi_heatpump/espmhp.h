@@ -98,7 +98,7 @@ class MitsubishiHeatPump : public PollingComponent, public climate::Climate {
         // set_remote_temp(0) to switch back to the internal sensor.
         void set_remote_temperature(float);
 
-        void set_compressor_frequency_sensor(Sensor *sensor) { this->compressor_frequency_sensor_ = sensor; };
+        void set_compressor_frequency_sensor(sensor::Sensor *sensor) { this->compressor_frequency_sensor_ = sensor; };
 
     protected:
         // HeatPump object using the underlying Arduino library.
@@ -115,7 +115,7 @@ class MitsubishiHeatPump : public PollingComponent, public climate::Climate {
             return this->hw_serial_;
         }
 
-        Sensor *compressor_frequency_sensor_{nullptr};
+        sensor::Sensor *compressor_frequency_sensor_{nullptr};
 
         //Print a warning message if we're using the sole hardware UART on an
         //ESP8266 or UART0 on ESP32

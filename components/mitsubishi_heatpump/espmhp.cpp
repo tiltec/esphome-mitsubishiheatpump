@@ -20,7 +20,7 @@
 #include "espmhp.h"
 using namespace esphome;
 
-static void MitsubishiHeatPump::set_sensor(Sensor *sensor, float value) {
+static void MitsubishiHeatPump::set_sensor(sensor::Sensor *sensor, float value) {
   if (sensor != nullptr && (!sensor->has_state() || sensor->get_raw_state() != value))
     sensor->publish_state(value);
 }
