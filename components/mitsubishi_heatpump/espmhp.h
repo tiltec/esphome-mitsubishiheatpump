@@ -19,6 +19,7 @@
 
 #include "esphome.h"
 #include "esphome/core/preferences.h"
+#include "esphome/components/sensor/sensor.h"
 
 #include "HeatPump.h"
 using namespace esphome;
