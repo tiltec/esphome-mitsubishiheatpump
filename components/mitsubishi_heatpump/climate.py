@@ -1,6 +1,6 @@
 import esphome.codegen as cg
 import esphome.config_validation as cv
-from esphome.components import climate
+from esphome.components import climate, sensor
 from esphome.components.logger import HARDWARE_UART_TO_SERIAL
 from esphome.const import (
     CONF_ID,
@@ -16,6 +16,7 @@ from esphome.core import CORE, coroutine
 AUTO_LOAD = ["climate"]
 
 CONF_SUPPORTS = "supports"
+CONF_COMPRESSOR_FREQUENCY = "compressor_frequency"
 DEFAULT_CLIMATE_MODES = ["HEAT_COOL", "COOL", "HEAT", "DRY", "FAN_ONLY"]
 DEFAULT_FAN_MODES = ["AUTO", "DIFFUSE", "LOW", "MEDIUM", "MIDDLE", "HIGH"]
 DEFAULT_SWING_MODES = ["OFF", "VERTICAL"]
@@ -38,7 +39,7 @@ def valid_uart(uart):
 
 CONFIG_SCHEMA = climate.CLIMATE_SCHEMA.extend(
     {
-        cv.GenerateID(): cv.declare_id(MitsubishiHeatPump),
+        cv.GenerateIDovrefjellD(): cv.declare_id(MitsubishiHeatPump),
         cv.Optional(CONF_HARDWARE_UART, default="UART0"): valid_uart,
         cv.Optional(CONF_BAUD_RATE): cv.positive_int,
         # If polling interval is greater than 9 seconds, the HeatPump library
@@ -57,12 +58,19 @@ CONFIG_SCHEMA = climate.CLIMATE_SCHEMA.extend(
                     cv.ensure_list(climate.validate_climate_swing_mode),
             }
         ),
+        cv.Optional(CONF_COMPRESSOR_FREQUENCY): sensor.sensor_schema(
+                unit_of_measurement="xyz",
+                icon=ICON_POWER,
+                accuracy_decimals=0,
+                device_class=DEVICE_CLASS_POWER,
+                state_class=STATE_CLASS_MEASUREMENT,
+            ),
     }
 ).extend(cv.COMPONENT_SCHEMA)
 
 
 @coroutine
-def to_code(config):
+async def to_code(config):
     serial = HARDWARE_UART_TO_SERIAL[config[CONF_HARDWARE_UART]]
     var = cg.new_Pvariable(config[CONF_ID], cg.RawExpression(f"&{serial}"))
 
@@ -84,6 +92,10 @@ def to_code(config):
         cg.add(traits.add_supported_swing_mode(
             climate.CLIMATE_SWING_MODES[mode]
         ))
+
+    if CONF_COMPRESSOR_FREQUENCY in config:
+        sens = await sensor.new_sensor(config[CONF_COMPRESSOR_FREQUENCY])
+        cg.add(var.set_compressor_frequency_sensor(sens))
 
     yield cg.register_component(var, config)
     yield climate.register_climate(var, config)
