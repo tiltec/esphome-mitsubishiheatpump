@@ -60,10 +60,10 @@ CONFIG_SCHEMA = climate.CLIMATE_SCHEMA.extend(
         ),
         cv.Optional(CONF_COMPRESSOR_FREQUENCY): sensor.sensor_schema(
                 unit_of_measurement="xyz",
-                icon=ICON_POWER,
+                #icon=ICON_POWER,
                 accuracy_decimals=0,
-                device_class=DEVICE_CLASS_POWER,
-                state_class=STATE_CLASS_MEASUREMENT,
+                #device_class=DEVICE_CLASS_POWER,
+                #state_class=STATE_CLASS_MEASUREMENT,
             ),
     }
 ).extend(cv.COMPONENT_SCHEMA)
