@@ -39,7 +39,7 @@ def valid_uart(uart):
 
 CONFIG_SCHEMA = climate.CLIMATE_SCHEMA.extend(
     {
-        cv.GenerateIDovrefjellD(): cv.declare_id(MitsubishiHeatPump),
+        cv.GenerateID(): cv.declare_id(MitsubishiHeatPump),
         cv.Optional(CONF_HARDWARE_UART, default="UART0"): valid_uart,
         cv.Optional(CONF_BAUD_RATE): cv.positive_int,
         # If polling interval is greater than 9 seconds, the HeatPump library
